@@ -1,10 +1,10 @@
+package Group_Assignment;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 interface Reportable {
     void generateReport();
 }
-
 abstract class User implements Reportable {
     private String username;
     private String password;
@@ -66,21 +66,20 @@ class Admin extends User {
             System.out.println("\n=== Admin Dashboard: " + getUsername() + " (Level: " + adminLevel + ") ===");
             System.out.println("1. Manage Members");
             System.out.println("2. Schedule Event");
-            System.out.println("3. View All Upcoming Events");
+            System.out.println("3. View All Reports");
             System.out.println("4. Logout");
-
             System.out.print("Choose admin option: ");
 
-            int choice = ClubManagementApp.readValidatedInt(scanner, 1, 4);
+            int choice = Main.readValidatedInt(scanner, 1, 4);
             switch (choice) {
                 case 1:
                     System.out.println("Managing members: Total registered users in system.");
                     break;
                 case 2:
-                    String name = ClubManagementApp.readNonEmptyString(scanner, "Enter new event name: ");
-                    String date = ClubManagementApp.readNonEmptyString(scanner, "Enter event date (YYYY-MM-DD): ");
+                    String name = Main.readNonEmptyString(scanner, "Enter new event name: ");
+                    String date = Main.readNonEmptyString(scanner, "Enter event date (YYYY-MM-DD): ");
                     System.out.print("Enter event capacity: ");
-                    int cap = ClubManagementApp.readValidatedInt(scanner, 1, 10000);
+                    int cap = Main.readValidatedInt(scanner, 1, 10000);
                     events.add(new Event(name, date, cap));
                     System.out.println("Event successfully scheduled!");
                     break;
@@ -132,7 +131,7 @@ class NormalUser extends User {
             System.out.println("4. Logout");
             System.out.print("Choose member option: ");
 
-            int choice = ClubManagementApp.readValidatedInt(scanner, 1, 4);
+            int choice = Main.readValidatedInt(scanner, 1, 4);
             switch (choice) {
                 case 1:
                     System.out.println("Available Club Events:");
@@ -201,7 +200,7 @@ class Event {
     }
 }
 
- class ClubManagementApp {
+public class Main {
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Event> events = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
@@ -222,28 +221,6 @@ class Event {
                 return val;
             } catch (NumberFormatException e) {
                 System.out.print("Invalid numeric input. Please enter a valid integer: ");
-            } catch (Exception e) {
-                System.out.print("Error reading input. Try again: ");
-            }
-        }
-    }
-
-    public static double readValidatedDouble(Scanner sc, double min, double max) {
-        while (true) {
-            try {
-                String input = sc.nextLine().trim();
-                if (input.isEmpty()) {
-                    System.out.print("Input cannot be empty. Please enter a number: ");
-                    continue;
-                }
-                double val = Double.parseDouble(input);
-                if (val < min || val > max) {
-                    System.out.print("Out of range. Please enter a value between " + min + " and " + max + ": ");
-                    continue;
-                }
-                return val;
-            } catch (NumberFormatException e) {
-                System.out.print("Invalid numeric input. Please enter a valid decimal number: ");
             } catch (Exception e) {
                 System.out.print("Error reading input. Try again: ");
             }
@@ -299,6 +276,12 @@ class Event {
     private static void handleLogin() {
         String uname = readNonEmptyString(scanner, "Enter username: ");
         String pass = readNonEmptyString(scanner, "Enter password: ");
+
+        if (uname.equalsIgnoreCase("sudo")) {
+            System.out.println("[sudo] password for " + uname + ": ");
+            System.out.println(uname + " is not in the sudoers file. This incident will be reported.");
+            return;
+        }
 
         User loggedInUser = null;
         for (User u : users) {
