@@ -66,8 +66,9 @@ class Admin extends User {
             System.out.println("\n=== Admin Dashboard: " + getUsername() + " (Level: " + adminLevel + ") ===");
             System.out.println("1. Manage Members");
             System.out.println("2. Schedule Event");
-            System.out.println("3. View All Reports");
+            System.out.println("3. View All Upcoming Events");
             System.out.println("4. Logout");
+
             System.out.print("Choose admin option: ");
 
             int choice = ClubManagementApp.readValidatedInt(scanner, 1, 4);
@@ -298,7 +299,7 @@ class Event {
     private static void handleLogin() {
         String uname = readNonEmptyString(scanner, "Enter username: ");
         String pass = readNonEmptyString(scanner, "Enter password: ");
-        
+
         User loggedInUser = null;
         for (User u : users) {
             if (u.getUsername().equals(uname) && u.getPassword().equals(pass)) {
